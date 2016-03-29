@@ -32,7 +32,7 @@ app.use(function(request, response, next) {
 
     pathsAccessed[request.path]++;
 
-    console.log("There have now been " + currentNumberOfRequests + " requests made to " + request.path);
+    console.log("There have now been " + pathsAccessed[request.path] + " requests made to " + request.path);
     next();
 });
 
@@ -81,6 +81,39 @@ app.use("/admin", function(request, response, next) {
 
     console.log("Someone is trying to get access to /admin! We're stopping them!");
     response.status(500).send("You cannot access /admin");
+});
+
+// 5. Where we add a number to the request object
+app.use(function(request, response, next) {
+   request.currentRequestEntry = currentNumberOfRequests;
+   request.isEven = currentNumberOfRequests % 2 === 0;
+   request.isOdd = currentNumberOfRequests % 2 === 1;
+
+   next();
+});
+
+// 6. Where we check if there's an odd or even request being made
+app.use(function(request, response, next) {
+   console.log("We are now looking at request " + request.currentRequestEntry);
+   if (request.isOdd) {
+       console.log("This is an odd request; we should see if there's anything wrong with it.");
+       response.pun = "That really bad odd pun";
+   }
+   
+   if (request.isEven) {
+       console.log("This request is getting even with somebody -- I hope they're not too rough");
+       response.pun = "Something about vengeance";
+   }
+   
+   next();
+});
+
+// 7. Where we log which pun happened
+app.use(function(request, response, next) {
+   console.log("We made a pun, it was bad");
+   console.log(response.pun);
+   
+   next();
 });
 
 // Get the best movies
