@@ -112,7 +112,6 @@ app.use(function(request, response, next) {
 app.use(function(request, response, next) {
    console.log("We made a pun, it was bad");
    console.log(response.pun);
-   
    next();
 });
 

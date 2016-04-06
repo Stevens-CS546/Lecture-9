@@ -249,9 +249,8 @@ MongoClient.connect(fullMongoUrl)
             if (id === undefined) return Promise.reject("No id provided");
             if (!memberToRemove) return Promise.reject("No memberToRemove provided");
 
-            // removes first matching array entry; remember, if you add
-            // 5 Matthew McConaughey to a cast list, you'll have to remove him 5 times if you use $pull
-            // you can use $pullAll to avoid this
+            // removes all matching array entry; remember, if you add
+            // you can use $pullAll to pull multiple entries
             return movieCollection.update({ _id: id }, { $pull: { "cast": memberToRemove } }).then(function() {
                 return exports.getMovie(id);
             });
